@@ -61,7 +61,7 @@ def dSdt(S, t, g, m1, m2, L1, L2):
 
 
 t = np.linspace(0, 40, num=1001)
-g = 9.81
+g = 5
 m1 = 2
 m2 = 1
 L1 = 2
@@ -87,13 +87,25 @@ x1, y1, x2, y2 = get_x1y1x2y2(t, ans.T[0], ans.T[2], L1, L2)
 def animate(i):
     ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
 
+    # Updating the trace
+    if i == 0:
+        trace.set_data([], [])
+    else:
+        x_trace, y_trace = trace.get_data()
+        x_trace = np.append(x_trace, x2[i])
+        y_trace = np.append(y_trace, y2[i])
+        trace.set_data(x_trace, y_trace)
+
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 8))
 ax.set_facecolor('w')
 ax.get_xaxis().set_ticks([])
 ax.get_yaxis().set_ticks([])
 ln1, = plt.plot([], [], 'ko-', lw=3, markersize=8)
+trace, = plt.plot([], [], 'r-', lw=1)  # Red trace line
 ax.set_ylim(-4, 4)
 ax.set_xlim(-4, 4)
 ani = animation.FuncAnimation(fig, animate, frames=1000, interval=50)
 ani.save('pen.gif', writer='pillow', fps=25)
+
+
